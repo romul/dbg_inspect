@@ -50,7 +50,9 @@ defmodule Dbg do
       result = unquote(ast)
 
       IO.puts(:stderr, [
-        "\e[41m\e[1m\x1B[K\n",
+        IO.ANSI.red_background(),
+        IO.ANSI.bright(),
+        "\x1B[K\n",
         Dbg.short_file_name(__ENV__.file),
         ":",
         to_string(__ENV__.line)
@@ -63,7 +65,8 @@ defmodule Dbg do
         unquote(value_representation),
         " #=> ",
         Kernel.inspect(result),
-        "\x1B[K\n\e[0m"
+        "\x1B[K\n",
+        IO.ANSI.reset()
       ])
 
       result
