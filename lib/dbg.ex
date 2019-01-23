@@ -95,6 +95,7 @@ defmodule Dbg do
   defp get_vars(ast, show_vars: true) do
     ast
     |> find_vars([])
+    |> Enum.uniq
     |> Enum.map(&{elem(&1, 0), &1})
   end
 
@@ -105,7 +106,7 @@ defmodule Dbg do
   end
 
   defp find_vars({_, _, [inner_ast | additional_args]}, vars) do
-    new_vars = find_vars(List.flatten(additional_args), [])
+    new_vars = Enum.flat_map(additional_args, &(find_vars(&1, [])))
     find_vars(inner_ast, vars ++ new_vars)
   end
 
