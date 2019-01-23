@@ -1,15 +1,15 @@
-# Dbg
+# DbgInspect
 
 dbg_inspect provides `Dbg.inspect/2` macro, which is an extended version of `IO.inspect/1` function for the debug purposes.
 
 ## Additional Features
 
-* Print representation of expression passed as the first argument
-* Print file name and line number where `Dbg.inspect/2` was called
+* Prints representation of expression passed as the first argument
+* Prints file name and line number where `Dbg.inspect/2` was called
 * Ability to print values of all variables used in the expression passed as the first argument
 * Colored output
 * Output to :stderr stream
-* No affects `prod` enviroment
+* No affects `prod` environment
 
 
 ## Example
@@ -28,8 +28,7 @@ dbg_inspect provides `Dbg.inspect/2` macro, which is an extended version of `IO.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `dbg` to your list of dependencies in `mix.exs`:
+The package can be installed by adding `dbg` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
