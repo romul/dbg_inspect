@@ -7,6 +7,7 @@ defmodule Dbg.MixProject do
       version: "0.1.0",
       elixir: "~> 1.7",
       description: "dbg_inspect provides an extended version of `IO.inspect/1` function for the debug purposes.",
+      package: package(),
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
