@@ -44,11 +44,9 @@ defmodule Dbg do
 
   defp inspect(_env, ast, opts) do
     value_representation = generate_value_representation(ast)
-    vars = get_vars(ast, opts)
 
     quote do
       result = unquote(ast)
-
       IO.puts(:stderr, [
         IO.ANSI.red_background(),
         IO.ANSI.bright(),
@@ -58,7 +56,9 @@ defmodule Dbg do
         to_string(__ENV__.line)
       ])
 
-      unquote(vars) |> Dbg.print_vars()
+      if unquote(opts)[:show_vars] do
+        Kernel.binding() |> Dbg.print_vars()
+      end
 
       IO.puts(:stderr, [
         "  ",
@@ -91,42 +91,4 @@ defmodule Dbg do
     |> Enum.join()
     |> String.replace("\n", "\n  ")
   end
-
-  defp get_vars(ast, show_vars: true) do
-    ast
-    |> find_vars([])
-    |> Enum.uniq
-    |> Enum.map(&{elem(&1, 0), &1})
-  end
-
-  defp get_vars(_, _), do: []
-
-  defp find_vars({_, _, [inner_ast]}, vars) do
-    find_vars(inner_ast, vars)
-  end
-
-  defp find_vars({_, _, [inner_ast | additional_args]}, vars) do
-    new_vars = Enum.flat_map(additional_args, &(find_vars(&1, [])))
-    find_vars(inner_ast, vars ++ new_vars)
-  end
-
-  defp find_vars([var_ast, args], vars) when is_tuple(var_ast) and is_list(args) do
-    find_vars([var_ast | args], vars)
-  end
-
-  defp find_vars(args, vars) when is_list(args) do
-    new_vars = args |> Enum.map(&only_vars/1) |> Enum.filter(& &1)
-    vars ++ new_vars
-  end
-
-  defp find_vars({var_name, _, nil} = var_ast, vars) when is_atom(var_name) do
-    [var_ast | vars]
-  end
-
-  defp find_vars(_, vars), do: vars
-
-  defp only_vars({var_name, _, nil} = var_ast) when is_atom(var_name), do: var_ast
-  defp only_vars([{label, var_ast}]) when is_atom(label), do: only_vars(var_ast)
-  defp only_vars({label, var_ast}) when is_atom(label), do: only_vars(var_ast)
-  defp only_vars(_), do: false
 end
