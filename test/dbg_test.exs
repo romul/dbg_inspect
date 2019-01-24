@@ -153,7 +153,7 @@ defmodule DbgTest do
     end
 
     assert dbg_inspect(fun) == [
-             "./test/dbg_test.exs:146",
+             "./test/dbg_test.exs:152",
              "  x = 5",
              "  y = 7",
              "  x |> max(y) #=> 7"
