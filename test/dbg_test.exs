@@ -48,7 +48,9 @@ defmodule DbgTest do
 
     assert dbg_inspect(fun) == [
              "./test/dbg_test.exs:46",
-             "  String.to_integer(to_string(x + 5)) #=> 12"
+             "  (x + 5)",
+             "  |> to_string",
+             "  |> String.to_integer() #=> 12"
            ]
   end
 
@@ -63,8 +65,10 @@ defmodule DbgTest do
     end
 
     assert dbg_inspect(fun) == [
-             "./test/dbg_test.exs:62",
-             "  Enum.into(Enum.map(list, &{&1, to_string(&1 * &1)}), %{}) #=> %{1 => \"1\", 2 => \"4\", 3 => \"9\"}"
+             "./test/dbg_test.exs:64",
+             "  list",
+             "  |> Enum.map(&{&1, to_string(&1 * &1)})",
+             "  |> Enum.into(%{}) #=> %{1 => \"1\", 2 => \"4\", 3 => \"9\"}"
            ]
   end
 
@@ -79,8 +83,9 @@ defmodule DbgTest do
     end
 
     assert dbg_inspect(fun) == [
-             "./test/dbg_test.exs:77",
-             "  to_string(x + 5) #=> \"12\""
+             "./test/dbg_test.exs:81",
+             "  (x + 5)",
+             "  |> to_string #=> \"12\""
            ]
   end
 
@@ -92,7 +97,7 @@ defmodule DbgTest do
     end
 
     assert dbg_inspect(fun) == [
-             "./test/dbg_test.exs:91",
+             "./test/dbg_test.exs:96",
              "  x = 7",
              "  y = 5",
              "  x + y #=> 12"
@@ -110,9 +115,11 @@ defmodule DbgTest do
     end
 
     assert dbg_inspect(fun) == [
-             "./test/dbg_test.exs:109",
+             "./test/dbg_test.exs:114",
              "  list = [1, 2, 3]",
-             "  Enum.into(Enum.map(list, &{&1, to_string(&1 * &1)}), %{}) #=> %{1 => \"1\", 2 => \"4\", 3 => \"9\"}"
+             "  list",
+             "  |> Enum.map(&{&1, to_string(&1 * &1)})",
+             "  |> Enum.into(%{}) #=> %{1 => \"1\", 2 => \"4\", 3 => \"9\"}"
            ]
   end
 
@@ -129,14 +136,13 @@ defmodule DbgTest do
     end
 
     assert dbg_inspect(fun) == [
-             "./test/dbg_test.exs:128",
+             "./test/dbg_test.exs:135",
              "  list = [1, 2, 3]",
              "  zero = 0",
-             "  Map.put(",
-             "    Enum.into(Enum.map(list, &{&1, to_string(&1 * &1)}), %{}),",
-             "    zero,",
-             "    to_string(zero)",
-             "  ) #=> %{0 => \"0\", 1 => \"1\", 2 => \"4\", 3 => \"9\"}"
+             "  list",
+             "  |> Enum.map(&{&1, to_string(&1 * &1)})",
+             "  |> Enum.into(%{})",
+             "  |> Map.put(zero, to_string(zero)) #=> %{0 => \"0\", 1 => \"1\", 2 => \"4\", 3 => \"9\"}"
            ]
   end
 
@@ -147,7 +153,7 @@ defmodule DbgTest do
     end
 
     assert dbg_inspect(fun) == [
-             "./test/dbg_test.exs:146",
+             "./test/dbg_test.exs:152",
              "  x = 5",
              "  y = 7",
              "  x |> max(y) #=> 7"
