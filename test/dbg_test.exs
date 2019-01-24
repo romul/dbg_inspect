@@ -145,4 +145,18 @@ defmodule DbgTest do
              "  |> Map.put(zero, to_string(zero)) #=> %{0 => \"0\", 1 => \"1\", 2 => \"4\", 3 => \"9\"}"
            ]
   end
+
+  test "inspect with passing expression directly w/o pipe operator" do
+    fun = fn ->
+      {x, y} = {5, 7}
+      Dbg.inspect(x |> max(y), show_vars: true)
+    end
+
+    assert dbg_inspect(fun) == [
+             "./test/dbg_test.exs:146",
+             "  x = 5",
+             "  y = 7",
+             "  x |> max(y) #=> 7"
+           ]
+  end
 end
